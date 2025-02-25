@@ -4,30 +4,46 @@ import {useAppSelector} from '../../store';
 import {Card} from '../../components/common/Card';
 import {Ionicons} from '@expo/vector-icons';
 import Animated, {FadeInDown, FadeInRight} from 'react-native-reanimated';
+import {useRouter} from 'expo-router';
 
 export default function HomeScreen() {
     const {user} = useAppSelector((state) => state.auth);
+    const router = useRouter();
 
-    const features: { title: string; icon: keyof typeof Ionicons.glyphMap; delay: number }[] = [
+    const features: {
+        title: string;
+        icon: keyof typeof Ionicons.glyphMap;
+        route: string;
+        delay: number;
+        description: string
+    }[] = [
         {
             title: "Track Symptoms",
             icon: "medical",
+            route: "/symptoms",
             delay: 200,
+            description: "Log and monitor your symptoms"
         },
         {
             title: "Medications",
             icon: "medical-outline",
+            route: "/medications",
             delay: 400,
+            description: "Manage your medications"
         },
         {
             title: "History",
             icon: "time",
+            route: "/symptoms",
             delay: 600,
+            description: "View your health timeline"
         },
         {
             title: "Notifications",
             icon: "notifications",
+            route: "/notifications",
             delay: 800,
+            description: "Check your reminders"
         },
     ];
 
@@ -58,9 +74,9 @@ export default function HomeScreen() {
                         >
                             <Card
                                 title={feature.title}
+                                description={feature.description}
                                 icon={<Ionicons name={feature.icon} size={24} color="#4F46E5"/>}
-                                onPress={() => {
-                                }}
+                                onPress={() => router.push(feature.route)}
                             />
                         </Animated.View>
                     ))}

@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, TextInput, Text} from 'react-native';
+import {View, TextInput, Text, Platform} from 'react-native';
 import {twMerge} from 'tailwind-merge';
 
 interface InputProps {
-    label: string;
+    label?: string;
     value: string;
     onChangeText: (text: string) => void;
     placeholder?: string;
@@ -11,6 +11,7 @@ interface InputProps {
     keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
     error?: string;
     className?: string;
+    type?: string;
 }
 
 export const Input = ({
@@ -22,10 +23,15 @@ export const Input = ({
                           keyboardType = 'default',
                           error,
                           className = '',
+                          type = 'text',
                       }: InputProps) => {
+    const inputProps = Platform.OS === 'web'
+        ? {type}
+        : {};
+
     return (
         <View className={twMerge('mb-4', className)}>
-            <Text className="text-gray-700 font-medium mb-1">{label}</Text>
+            {label && <Text className="text-gray-700 font-medium mb-1">{label}</Text>}
             <TextInput
                 value={value}
                 onChangeText={onChangeText}
@@ -37,10 +43,11 @@ export const Input = ({
                     error ? 'border-red-500' : 'border-gray-300',
                     'bg-white'
                 )}
+                {...inputProps}
             />
             {error && (
                 <Text className="text-red-500 text-sm mt-1">{error}</Text>
             )}
         </View>
     );
-}
+};

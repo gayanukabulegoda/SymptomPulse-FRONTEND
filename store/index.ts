@@ -1,16 +1,16 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 import authReducer from './slices/authSlice';
-// import symptomReducer from './slices/symptomSlice';
-// import medicationReducer from './slices/medicationSlice';
-// import notificationReducer from './slices/notificationSlice';
+import symptomReducer from './slices/symptomSlice';
+import medicationReducer from './slices/medicationSlice';
+import notificationReducer from './slices/notificationSlice';
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        // symptoms: symptomReducer,
-        // medications: medicationReducer,
-        // notifications: notificationReducer,
+        symptoms: symptomReducer,
+        medications: medicationReducer,
+        notifications: notificationReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

@@ -5,9 +5,9 @@ export default function TabLayout() {
     return (
         <Tabs
             screenOptions={{
+                headerShown: false,
                 tabBarActiveTintColor: '#4F46E5',
                 tabBarInactiveTintColor: '#6B7280',
-                headerShown: false,
             }}
         >
             <Tabs.Screen
@@ -44,6 +44,7 @@ export default function TabLayout() {
                     tabBarIcon: ({size, color}) => (
                         <Ionicons name="notifications" size={size} color={color}/>
                     ),
+                    tabBarBadge: '3', // Can make this dynamic based on unread notifications
                 }}
             />
         </Tabs>
