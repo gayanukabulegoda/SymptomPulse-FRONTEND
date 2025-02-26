@@ -28,13 +28,6 @@ export const NotificationCard = ({title, body, scheduledAt, onPress}: Notificati
                     <Text style={styles.body}>{body}</Text>
                     <Text style={styles.time}>{formattedDate}</Text>
                 </View>
-
-                <Ionicons
-                    name="chevron-forward"
-                    size={20}
-                    color="#9CA3AF"
-                    style={styles.chevron}
-                />
             </Animated.View>
         </TouchableOpacity>
     );

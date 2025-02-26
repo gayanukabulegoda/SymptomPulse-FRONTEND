@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
-import { Link } from 'expo-router';
-import { RegisterForm } from '../../components/auth/RegisterForm';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import {View, Text, Image} from 'react-native';
+import {Link} from 'expo-router';
+import {RegisterForm} from '../../components/auth/RegisterForm';
+import Animated, {FadeInUp} from 'react-native-reanimated';
 
 export default function RegisterScreen() {
     return (
@@ -13,7 +13,7 @@ export default function RegisterScreen() {
             >
                 <View className="mb-8">
                     <Image
-                        source={{ uri: 'https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=200&auto=format' }}
+                        source={{uri: 'https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=200&auto=format'}}
                         className="w-24 h-24 rounded-full mx-auto mb-4"
                     />
                 </View>
@@ -25,7 +25,7 @@ export default function RegisterScreen() {
                     <Text className="text-gray-600 text-center mb-8">
                         Join SymptomPulse to track your health
                     </Text>
-                    <RegisterForm />
+                    <RegisterForm/>
                     <View className="flex-row justify-center items-center mt-6">
                         <Text className="text-gray-600">Already have an account? </Text>
                         <Link href="/login" className="text-primary font-semibold">

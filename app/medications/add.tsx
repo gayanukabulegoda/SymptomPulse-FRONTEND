@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView, Platform} from 'react-native';
+import {View, Text, Pressable} from 'react-native';
 import {useRouter} from 'expo-router';
 import {useAppDispatch} from '../../store';
 import {addMedication} from '../../store/slices/medicationSlice';
@@ -7,6 +7,9 @@ import {Input} from '../../components/common/Input';
 import {Button} from '../../components/common/Button';
 import {Picker} from '@react-native-picker/picker';
 import Animated, {FadeInDown} from 'react-native-reanimated';
+import {ChevronDown, XCircle} from 'lucide-react-native';
+import {format} from 'date-fns';
+import {CustomDatePicker} from '../../components/common/CustomDatePicker';
 
 export default function AddMedicationScreen() {
     const router = useRouter();
@@ -17,52 +20,23 @@ export default function AddMedicationScreen() {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState<Date | undefined>();
     const [error, setError] = useState<string | null>(null);
-    const [startDateError, setStartDateError] = useState<string | null>(null);
-    const [endDateError, setEndDateError] = useState<string | null>(null);
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [editingStartDate, setEditingStartDate] = useState(false);
 
-    const validateDate = (dateStr: string): Date | null => {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) {
-            return null;
-        }
-        return date;
-    };
-
-    const handleStartDateChange = (text: string) => {
-        const date = validateDate(text);
-        if (date) {
+    const handleDateChange = (date: Date) => {
+        if (editingStartDate) {
             setStartDate(date);
-            setStartDateError(null);
-        } else {
-            setStartDateError('Please enter a valid date (YYYY-MM-DD)');
-        }
-    };
-
-    const handleEndDateChange = (text: string) => {
-        if (!text) {
-            setEndDate(undefined);
-            setEndDateError(null);
-            return;
-        }
-
-        const date = validateDate(text);
-        if (date) {
-            if (date < startDate) {
-                setEndDateError('End date must be after start date');
-            } else {
-                setEndDate(date);
-                setEndDateError(null);
+            if (endDate && date > endDate) {
+                setEndDate(undefined);
             }
         } else {
-            setEndDateError('Please enter a valid date (YYYY-MM-DD)');
+            if (date < startDate) {
+                setError('End date must be after start date');
+                return;
+            }
+            setEndDate(date);
         }
-    };
-
-    const formatDate = (date: Date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        setError(null);
     };
 
     const handleSubmit = async () => {
@@ -72,18 +46,15 @@ export default function AddMedicationScreen() {
                 return;
             }
 
-            if (startDateError || endDateError) {
-                setError('Please fix the date errors before submitting');
-                return;
-            }
-
-            await dispatch(addMedication({
-                name,
-                dosage,
-                schedule,
-                startDate,
-                endDate,
-            })).unwrap();
+            await dispatch(
+                addMedication({
+                    name,
+                    dosage,
+                    schedule,
+                    startDate,
+                    endDate,
+                })
+            ).unwrap();
 
             router.back();
         } catch (err) {
@@ -92,126 +63,118 @@ export default function AddMedicationScreen() {
     };
 
     return (
-        <ScrollView style={styles.container}>
-            <Animated.View
-                entering={FadeInDown.duration(1000).springify()}
-                style={styles.content}
-            >
-                <Text style={styles.title}>Add New Medication</Text>
+        <Animated.ScrollView
+            entering={FadeInDown.duration(1000).springify()}
+            className="flex-1 bg-slate-50"
+        >
+            <View className="p-6">
+                <Text className="text-3xl font-bold text-slate-900 mb-8">
+                    Add New Medication
+                </Text>
 
                 {error && (
-                    <Text style={styles.error}>{error}</Text>
+                    <View className="bg-red-100 p-4 rounded-lg mb-6 flex-row items-center">
+                        <XCircle size={20} color="#dc2626" className="mr-2"/>
+                        <Text className="text-red-600 font-medium">{error}</Text>
+                    </View>
                 )}
 
-                <Input
-                    label="Medication Name"
-                    value={name}
-                    onChangeText={setName}
-                    placeholder="Enter medication name"
-                />
+                <View className="space-y-6">
+                    <Input
+                        label="Medication Name"
+                        value={name}
+                        onChangeText={setName}
+                        placeholder="Enter medication name"
+                        className="bg-white shadow-sm"
+                    />
 
-                <Input
-                    label="Dosage"
-                    value={dosage}
-                    onChangeText={setDosage}
-                    placeholder="Enter dosage (optional)"
-                />
+                    <Input
+                        label="Dosage"
+                        value={dosage}
+                        onChangeText={setDosage}
+                        placeholder="Enter dosage (optional)"
+                        className="bg-white shadow-sm"
+                    />
 
-                <View style={styles.formGroup}>
-                    <Text style={styles.label}>Schedule</Text>
-                    <View style={styles.pickerContainer}>
-                        <Picker
-                            selectedValue={schedule}
-                            onValueChange={(value) => setSchedule(value)}
-                            style={styles.picker}
+                    <View>
+                        <Text className="text-slate-700 font-medium mb-3">Schedule</Text>
+                        <View className="bg-white rounded-lg border border-slate-200 shadow-sm">
+                            <Picker
+                                selectedValue={schedule}
+                                onValueChange={(value) => setSchedule(value)}
+                                dropdownIconColor="#64748b"
+                            >
+                                <Picker.Item label="Once Daily" value="DAILY"/>
+                                <Picker.Item label="Twice Daily" value="TWICE_DAILY"/>
+                                <Picker.Item label="Custom" value="WEEKLY"/>
+                                <Picker.Item label="As Needed" value="AS_NEEDED"/>
+                            </Picker>
+                        </View>
+                    </View>
+
+                    <View className="space-y-4">
+                        <View>
+                            <Text className="text-slate-700 font-medium mb-3">
+                                Start Date
+                            </Text>
+                            <Pressable
+                                onPress={() => {
+                                    setEditingStartDate(true);
+                                    setShowDatePicker(true);
+                                }}
+                                className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex-row justify-between items-center"
+                            >
+                                <Text className="text-slate-800">
+                                    {format(startDate, 'dd MMM yyyy')}
+                                </Text>
+                                <ChevronDown size={20} color="#64748b"/>
+                            </Pressable>
+                        </View>
+
+                        <View>
+                            <Text className="text-slate-700 font-medium mb-3">
+                                End Date (Optional)
+                            </Text>
+                            <Pressable
+                                onPress={() => {
+                                    setEditingStartDate(false);
+                                    setShowDatePicker(true);
+                                }}
+                                className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex-row justify-between items-center"
+                            >
+                                <Text className="text-slate-800">
+                                    {endDate ? format(endDate, 'dd MMM yyyy') : 'Select end date'}
+                                </Text>
+                                <ChevronDown size={20} color="#64748b"/>
+                            </Pressable>
+                        </View>
+                    </View>
+
+                    <CustomDatePicker
+                        visible={showDatePicker}
+                        date={editingStartDate ? startDate : endDate || new Date()}
+                        onDateChange={handleDateChange}
+                        onClose={() => setShowDatePicker(false)}
+                        minimumDate={editingStartDate ? undefined : startDate}
+                    />
+
+                    <View className="flex-row space-x-0 mt-8">
+                        <Button
+                            onPress={() => router.back()}
+                            variant="outline"
+                            className="flex-1 bg-white border-slate-200 shadow-sm"
                         >
-                            <Picker.Item label="Once Daily" value="DAILY"/>
-                            <Picker.Item label="Twice Daily" value="TWICE_DAILY"/>
-                        </Picker>
+                            Cancel
+                        </Button>
+                        <Button
+                            onPress={handleSubmit}
+                            className="flex-1 bg-primary shadow-lg shadow-blue-100"
+                        >
+                            Add Medication
+                        </Button>
                     </View>
                 </View>
-
-                <View style={styles.formGroup}>
-                    <Text style={styles.label}>Start Date</Text>
-                    <Input
-                        value={formatDate(startDate)}
-                        onChangeText={handleStartDateChange}
-                        placeholder="YYYY-MM-DD"
-                        type={Platform.OS === 'web' ? 'date' : 'text'}
-                        error={startDateError ?? undefined}
-                    />
-                </View>
-
-                <View style={styles.formGroup}>
-                    <Text style={styles.label}>End Date (Optional)</Text>
-                    <Input
-                        value={endDate ? formatDate(endDate) : ''}
-                        onChangeText={handleEndDateChange}
-                        placeholder="YYYY-MM-DD"
-                        type={Platform.OS === 'web' ? 'date' : 'text'}
-                        error={endDateError ?? undefined}
-                    />
-                </View>
-
-                <View style={styles.buttonContainer}>
-                    <Button
-                        onPress={() => router.back()}
-                        variant="outline"
-                        className="flex-1 mr-2"
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onPress={handleSubmit}
-                        className="flex-1 ml-2"
-                    >
-                        Add Medication
-                    </Button>
-                </View>
-            </Animated.View>
-        </ScrollView>
+            </View>
+        </Animated.ScrollView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F9FAFB',
-    },
-    content: {
-        padding: 16,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#1F2937',
-        marginBottom: 24,
-    },
-    error: {
-        color: '#EF4444',
-        marginBottom: 16,
-    },
-    formGroup: {
-        marginBottom: 16,
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#374151',
-        marginBottom: 8,
-    },
-    pickerContainer: {
-        backgroundColor: 'white',
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#E5E7EB',
-        overflow: 'hidden',
-    },
-    picker: {
-        height: 50,
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        marginTop: 24,
-    },
-});

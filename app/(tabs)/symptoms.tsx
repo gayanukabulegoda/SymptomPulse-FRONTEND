@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { logSymptoms, fetchSymptomHistory } from '../../store/slices/symptomSlice';
-import { SymptomSelector } from '../../components/symptoms/SymptomSelector';
-import { SymptomHistory } from '../../components/symptoms/SymptomHistory';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import {useAppDispatch, useAppSelector} from '../../store';
+import {logSymptoms, fetchSymptomHistory} from '../../store/slices/symptomSlice';
+import {SymptomSelector} from '../../components/symptoms/SymptomSelector';
+import {SymptomHistory} from '../../components/symptoms/SymptomHistory';
+import Animated, {FadeInDown} from 'react-native-reanimated';
 
 export default function SymptomsScreen() {
     const dispatch = useAppDispatch();
-    const { loading, error } = useAppSelector((state) => state.symptoms);
+    const {loading, error} = useAppSelector((state) => state.symptoms);
 
     useEffect(() => {
         loadInitialHistory();
     }, []);
 
     const loadInitialHistory = () => {
-        dispatch(fetchSymptomHistory({ page: 1, limit: 10 }));
+        dispatch(fetchSymptomHistory({page: 1, limit: 10}));
     };
 
     const handleSymptomSubmit = async (selectedSymptoms: string[]) => {
@@ -39,12 +39,12 @@ export default function SymptomsScreen() {
                     <Text style={styles.error}>{error}</Text>
                 )}
 
-                <SymptomSelector onSubmit={handleSymptomSubmit} loading={loading} />
+                <SymptomSelector onSubmit={handleSymptomSubmit} loading={loading}/>
             </Animated.View>
 
             <View style={styles.historyContainer}>
                 <Text style={styles.historyTitle}>Symptom History</Text>
-                <SymptomHistory />
+                <SymptomHistory/>
             </View>
         </View>
     );

@@ -1,20 +1,28 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text} from 'react-native';
 import {MedicationList} from '../../components/medications/MedicationList';
 import {AddMedicationButton} from '../../components/medications/AddMedicationButton';
 import Animated, {FadeInDown} from 'react-native-reanimated';
+import {Ionicons} from '@expo/vector-icons';
 
 export default function MedicationsScreen() {
     return (
-        <View style={styles.container}>
+        <View className="flex-1 bg-gray-50">
             <Animated.View
                 entering={FadeInDown.duration(1000).springify()}
-                style={styles.header}
+                className="bg-white shadow-sm border-b border-gray-200"
             >
-                <Text style={styles.title}>Medications</Text>
-                <Text style={styles.subtitle}>
-                    Track and manage your medications
-                </Text>
+                <View className="pt-12 px-6 pb-6">
+                    <View className="flex-row items-center mb-2">
+                        <Ionicons name="medical-outline" size={24} color="#4F46E5"/>
+                        <Text className="text-2xl font-bold text-gray-900 ml-2">
+                            Medications
+                        </Text>
+                    </View>
+                    <Text className="text-gray-600">
+                        Track and manage your medications schedule
+                    </Text>
+                </View>
             </Animated.View>
 
             <MedicationList/>
@@ -22,27 +30,3 @@ export default function MedicationsScreen() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F9FAFB',
-    },
-    header: {
-        padding: 16,
-        backgroundColor: '#FFFFFF',
-        borderBottomWidth: 1,
-        borderBottomColor: '#E5E7EB',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#1F2937',
-        marginBottom: 8,
-    },
-    subtitle: {
-        fontSize: 16,
-        color: '#6B7280',
-        marginBottom: 8,
-    },
-});

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 
 export const MedicationCard = ({medication}: { medication: any }) => {
@@ -9,132 +9,57 @@ export const MedicationCard = ({medication}: { medication: any }) => {
                 return 'Once daily';
             case 'TWICE_DAILY':
                 return 'Twice daily';
+            case 'WEEKLY':
+                return 'Once weekly';
+            case 'AS_NEEDED':
+                return 'As needed';
             default:
                 return schedule;
         }
     };
 
     return (
-        <View style={styles.card}>
-            <View style={styles.header}>
-                <View style={styles.titleContainer}>
-                    <Text style={styles.name}>{medication.name}</Text>
-                    <Text style={styles.schedule}>
-                        {getScheduleText(medication.schedule)}
-                    </Text>
-                </View>
-                <TouchableOpacity style={styles.moreButton}>
-                    <Ionicons name="ellipsis-vertical" size={20} color="#6B7280"/>
-                </TouchableOpacity>
+        <View className="bg-white rounded-2xl p-6 sm:p-8 mb-6 shadow-lg w-full max-w-md mx-auto">
+            {/* Header */}
+            <View className="mb-4">
+                <Text className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
+                    {medication.name}
+                </Text>
+                <Text className="text-sm text-gray-600">
+                    {getScheduleText(medication.schedule)}
+                </Text>
             </View>
 
-            <View style={styles.details}>
+            {/* Divider */}
+            <View className="border-t border-gray-200 pt-4">
+                {/* Dosage */}
                 {medication.dosage && (
-                    <View style={styles.detailRow}>
-                        <Ionicons name="medical" size={16} color="#4F46E5"/>
-                        <Text style={styles.detailText}>{medication.dosage}</Text>
+                    <View className="flex-row items-center mb-3">
+                        <Ionicons name="medical" size={18} color="#4F46E5"/>
+                        <Text className="ml-2 text-base text-gray-700">
+                            {medication.dosage}
+                        </Text>
                     </View>
                 )}
 
-                <View style={styles.detailRow}>
-                    <Ionicons name="calendar" size={16} color="#4F46E5"/>
-                    <Text style={styles.detailText}>
+                {/* Start Date */}
+                <View className="flex-row items-center mb-3">
+                    <Ionicons name="calendar" size={18} color="#4F46E5"/>
+                    <Text className="ml-2 text-base text-gray-700">
                         Started {new Date(medication.startDate).toLocaleDateString()}
                     </Text>
                 </View>
 
+                {/* End Date */}
                 {medication.endDate && (
-                    <View style={styles.detailRow}>
-                        <Ionicons name="calendar-outline" size={16} color="#4F46E5"/>
-                        <Text style={styles.detailText}>
+                    <View className="flex-row items-center">
+                        <Ionicons name="calendar-outline" size={18} color="#4F46E5"/>
+                        <Text className="ml-2 text-base text-gray-700">
                             Until {new Date(medication.endDate).toLocaleDateString()}
                         </Text>
                     </View>
                 )}
             </View>
-
-            <View style={styles.footer}>
-                <TouchableOpacity style={styles.actionButton}>
-                    <Ionicons name="checkmark-circle" size={20} color="#10B981"/>
-                    <Text style={[styles.actionText, {color: '#10B981'}]}>
-                        Take Now
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.actionButton}>
-                    <Ionicons name="time" size={20} color="#6B7280"/>
-                    <Text style={styles.actionText}>View History</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    card: {
-        backgroundColor: 'white',
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 16,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        marginBottom: 12,
-    },
-    titleContainer: {
-        flex: 1,
-    },
-    name: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#1F2937',
-        marginBottom: 4,
-    },
-    schedule: {
-        fontSize: 14,
-        color: '#6B7280',
-    },
-    moreButton: {
-        padding: 4,
-    },
-    details: {
-        marginBottom: 16,
-    },
-    detailRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    detailText: {
-        marginLeft: 8,
-        fontSize: 14,
-        color: '#4B5563',
-    },
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderTopWidth: 1,
-        borderTopColor: '#E5E7EB',
-        paddingTop: 12,
-    },
-    actionButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-    },
-    actionText: {
-        marginLeft: 4,
-        fontSize: 14,
-        color: '#6B7280',
-    },
-});

@@ -44,7 +44,6 @@ export default function TabLayout() {
                     tabBarIcon: ({size, color}) => (
                         <Ionicons name="notifications" size={size} color={color}/>
                     ),
-                    tabBarBadge: '3', // Can make this dynamic based on unread notifications
                 }}
             />
         </Tabs>

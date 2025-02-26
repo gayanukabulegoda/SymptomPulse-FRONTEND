@@ -3,8 +3,6 @@ import {useEffect} from 'react';
 import {Provider} from 'react-redux';
 import {Stack} from 'expo-router';
 import {store} from '../store';
-import {StatusBar} from 'expo-status-bar';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useAppSelector} from '../store';
 import {useRouter, useSegments} from 'expo-router';
 
@@ -24,14 +22,18 @@ function RootLayoutNav() {
     }, [isAuthenticated, segments]);
 
     return (
-        <GestureHandlerRootView style={{flex: 1}}>
-            <Stack>
-                <Stack.Screen name="(auth)" options={{headerShown: false}}/>
-                <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
-                <Stack.Screen name="medications/add" options={{presentation: 'modal', title: 'Add Medication'}}/>
-            </Stack>
-            <StatusBar style="auto"/>
-        </GestureHandlerRootView>
+        <Stack>
+            <Stack.Screen name="(auth)" options={{headerShown: false}}/>
+            <Stack.Screen name="(tabs)" options={{headerShown: false}}/>
+            <Stack.Screen
+                name="profile"
+                options={{
+                    presentation: 'modal',
+                    headerShown: true,
+                    title: 'Profile'
+                }}
+            />
+        </Stack>
     );
 }
 

@@ -1,22 +1,22 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { useAppSelector, useAppDispatch } from '../../store';
-import { fetchSymptomHistory } from '../../store/slices/symptomSlice';
-import Animated, { FadeInUp } from 'react-native-reanimated';
+import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {useAppSelector, useAppDispatch} from '../../store';
+import {fetchSymptomHistory} from '../../store/slices/symptomSlice';
+import Animated, {FadeInUp} from 'react-native-reanimated';
 
 export const SymptomHistory = () => {
     const dispatch = useAppDispatch();
-    const { entries, loading, hasMore, currentPage } = useAppSelector(
+    const {entries, loading, hasMore, currentPage} = useAppSelector(
         (state) => state.symptoms
     );
 
     const loadMore = () => {
         if (!loading && hasMore) {
-            dispatch(fetchSymptomHistory({ page: currentPage + 1, limit: 10 }));
+            dispatch(fetchSymptomHistory({page: currentPage + 1, limit: 10}));
         }
     };
 
-    const renderItem = ({ item, index }: { item: any; index: number }) => (
+    const renderItem = ({item, index}: { item: any; index: number }) => (
         <Animated.View
             entering={FadeInUp.delay(index * 100)}
             style={styles.historyCard}
