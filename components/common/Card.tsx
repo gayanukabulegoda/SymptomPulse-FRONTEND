@@ -1,7 +1,11 @@
 import React from 'react';
 import {TouchableOpacity, Text, View, StyleSheet} from 'react-native';
 import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated';
-
+/**
+ * @file Card.tsx
+ * @description Common card component for the application.
+ * @exports Card
+ */
 interface CardProps {
     title: string;
     description: string;

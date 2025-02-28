@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../store';
+import {useAppDispatch, useAppSelector} from '../../store/store';
 import {login} from '../../store/slices/authSlice';
 import {Button} from '../common/Button';
 import {Input} from '../common/Input';
-
+/**
+ * @file LoginForm.tsx
+ * @description The login form component for login screen.
+ * @exports LoginForm
+ */
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

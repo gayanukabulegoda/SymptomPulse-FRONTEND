@@ -1,7 +1,11 @@
 import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
 import {twMerge} from 'tailwind-merge';
-
+/**
+ * @file Button.tsx
+ * @description Common button component for the application.
+ * @exports Button
+ */
 interface ButtonProps {
     onPress: () => void;
     loading?: boolean;

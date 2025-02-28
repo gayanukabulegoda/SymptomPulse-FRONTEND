@@ -1,7 +1,12 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosConfig';
 import {API_URL} from '../../config';
-
+/**
+ * @file: notificationSlice.ts
+ * @description: The redux slice for notification related actions.
+ * @thunks: fetchPendingNotifications
+ * @exports notificationSlice
+ */
 interface Notification {
     id: number;
     title: string;
@@ -25,7 +30,7 @@ const initialState: NotificationState = {
 export const fetchPendingNotifications = createAsyncThunk(
     'notifications/fetchPending',
     async () => {
-        const response = await axios.get(`${API_URL}/notifications/pending`);
+        const response = await axiosInstance.get(`${API_URL}/notifications/`);
         return response.data.data;
     }
 );
@@ -33,12 +38,7 @@ export const fetchPendingNotifications = createAsyncThunk(
 const notificationSlice = createSlice({
     name: 'notifications',
     initialState,
-    reducers: {
-        clearNotifications: (state) => {
-            state.notifications = [];
-            state.error = null;
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchPendingNotifications.pending, (state) => {
@@ -56,5 +56,4 @@ const notificationSlice = createSlice({
     },
 });
 
-export const {clearNotifications} = notificationSlice.actions;
 export default notificationSlice.reducer;

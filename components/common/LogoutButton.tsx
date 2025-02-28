@@ -1,9 +1,13 @@
 import React from 'react';
 import {TouchableOpacity, Text, TouchableOpacityProps, TextProps} from 'react-native';
-import {useAppDispatch} from '../../store';
+import {useAppDispatch} from '../../store/store';
 import {logout} from '../../store/slices/authSlice';
 import {Ionicons} from '@expo/vector-icons';
-
+/**
+ * @file LogoutButton.tsx
+ * @description The logout button component for the application.
+ * @exports LogoutButton
+ */
 interface LogoutButtonProps {
     className?: TouchableOpacityProps['className'];
     textClass?: TextProps['className'];

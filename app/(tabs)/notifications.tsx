@@ -3,7 +3,11 @@ import {View, Text} from 'react-native';
 import {NotificationList} from '../../components/notifications/NotificationList';
 import Animated, {FadeInDown} from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
-
+/**
+ * @file notifications.tsx
+ * @description Notifications screen component for user to view health reminders.
+ * @exports NotificationsScreen
+ */
 export default function NotificationsScreen() {
     return (
         <View className="flex-1 bg-gray-50">

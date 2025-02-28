@@ -1,10 +1,14 @@
 import React, {useEffect} from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../store';
+import {View, Text, FlatList} from 'react-native';
+import {useAppDispatch, useAppSelector} from '../../store/store';
 import {fetchMedications} from '../../store/slices/medicationSlice';
 import {MedicationCard} from './MedicationCard';
 import Animated, {FadeInUp} from 'react-native-reanimated';
-
+/**
+ * @file MedicationList.tsx
+ * @description The medication list component for the medications screen.
+ * @exports MedicationList
+ */
 export const MedicationList = () => {
     const dispatch = useAppDispatch();
     const {medications, loading, error} = useAppSelector((state) => state.medications);
@@ -21,16 +25,16 @@ export const MedicationList = () => {
 
     if (loading) {
         return (
-            <View style={styles.centerContainer}>
-                <Text style={styles.loadingText}>Loading medications...</Text>
+            <View className="flex-1 justify-center items-center p-4">
+                <Text className="text-base text-gray-500">Loading medications...</Text>
             </View>
         );
     }
 
     if (error) {
         return (
-            <View style={styles.centerContainer}>
-                <Text style={styles.errorText}>{error}</Text>
+            <View className="flex-1 justify-center items-center p-4">
+                <Text className="text-base text-red-500 text-center">{error}</Text>
             </View>
         );
     }
@@ -40,39 +44,12 @@ export const MedicationList = () => {
             data={medications}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.listContent}
+            className="p-4 flex-grow"
             ListEmptyComponent={
-                <View style={styles.centerContainer}>
-                    <Text style={styles.emptyText}>No medications added yet</Text>
+                <View className="flex-1 justify-center items-center p-4">
+                    <Text className="text-base text-gray-500 italic">No medications added yet</Text>
                 </View>
             }
         />
     );
 };
-
-const styles = StyleSheet.create({
-    listContent: {
-        padding: 16,
-        flexGrow: 1,
-    },
-    centerContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-    },
-    loadingText: {
-        fontSize: 16,
-        color: '#6B7280',
-    },
-    errorText: {
-        fontSize: 16,
-        color: '#EF4444',
-        textAlign: 'center',
-    },
-    emptyText: {
-        fontSize: 16,
-        color: '#6B7280',
-        fontStyle: 'italic',
-    },
-});

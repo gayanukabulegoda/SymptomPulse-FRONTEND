@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {useAppDispatch, useAppSelector} from '../../store';
+import {useAppDispatch, useAppSelector} from '../../store/store';
 import {register} from '../../store/slices/authSlice';
 import {Button} from '../common/Button';
 import {Input} from '../common/Input';
-
+/**
+ * @file RegisterForm.tsx
+ * @description The register form component for register screen.
+ * @exports RegisterForm
+ */
 export const RegisterForm = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');

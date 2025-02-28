@@ -41,4 +41,3 @@ yarn-error.*
 
 # misc
 package-lock.json
-config.ts

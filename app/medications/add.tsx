@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, Pressable} from 'react-native';
 import {useRouter} from 'expo-router';
-import {useAppDispatch} from '../../store';
+import {useAppDispatch} from '../../store/store';
 import {addMedication} from '../../store/slices/medicationSlice';
 import {Input} from '../../components/common/Input';
 import {Button} from '../../components/common/Button';
@@ -10,7 +10,11 @@ import Animated, {FadeInDown} from 'react-native-reanimated';
 import {ChevronDown, XCircle} from 'lucide-react-native';
 import {format} from 'date-fns';
 import {CustomDatePicker} from '../../components/common/CustomDatePicker';
-
+/**
+ * @file add.tsx
+ * @description Add medication screen component for user to add a new medication.
+ * @exports AddMedicationScreen
+ */
 export default function AddMedicationScreen() {
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -97,7 +101,7 @@ export default function AddMedicationScreen() {
                     />
 
                     <View>
-                        <Text className="text-slate-700 font-medium mb-3">Schedule</Text>
+                        <Text className="text-slate-700 font-medium mb-1">Schedule</Text>
                         <View className="bg-white rounded-lg border border-slate-200 shadow-sm">
                             <Picker
                                 selectedValue={schedule}
@@ -114,7 +118,7 @@ export default function AddMedicationScreen() {
 
                     <View className="space-y-4">
                         <View>
-                            <Text className="text-slate-700 font-medium mb-3">
+                            <Text className="text-slate-700 font-medium mb-1 mt-4">
                                 Start Date
                             </Text>
                             <Pressable
@@ -132,7 +136,7 @@ export default function AddMedicationScreen() {
                         </View>
 
                         <View>
-                            <Text className="text-slate-700 font-medium mb-3">
+                            <Text className="text-slate-700 font-medium mb-1 mt-4">
                                 End Date (Optional)
                             </Text>
                             <Pressable
@@ -162,7 +166,7 @@ export default function AddMedicationScreen() {
                         <Button
                             onPress={() => router.back()}
                             variant="outline"
-                            className="flex-1 bg-white border-slate-200 shadow-sm"
+                            className="flex-1 bg-white border-slate-200 shadow-sm mr-2"
                         >
                             Cancel
                         </Button>

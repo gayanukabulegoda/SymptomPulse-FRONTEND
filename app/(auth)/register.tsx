@@ -3,7 +3,11 @@ import {View, Text, Image} from 'react-native';
 import {Link} from 'expo-router';
 import {RegisterForm} from '../../components/auth/RegisterForm';
 import Animated, {FadeInUp} from 'react-native-reanimated';
-
+/**
+ * @file register.tsx
+ * @description Register screen component for user to create an account.
+ * @exports RegisterScreen
+ */
 export default function RegisterScreen() {
     return (
         <View className="flex-1 bg-gray-50">

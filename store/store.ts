@@ -4,7 +4,11 @@ import authReducer from './slices/authSlice';
 import symptomReducer from './slices/symptomSlice';
 import medicationReducer from './slices/medicationSlice';
 import notificationReducer from './slices/notificationSlice';
-
+/**
+ * @file: store.ts
+ * @description: The redux store configuration.
+ * @exports store, RootState, AppDispatch, useAppDispatch, useAppSelector
+ */
 export const store = configureStore({
     reducer: {
         auth: authReducer,

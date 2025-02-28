@@ -1,7 +1,12 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosConfig';
 import {API_URL} from '../../config';
-
+/**
+ * @file: medicationSlice.ts
+ * @description: The redux slice for medication related actions.
+ * @thunks: addMedication, fetchMedications
+ * @exports medicationSlice
+ */
 interface MedicationState {
     medications: any[];
     loading: boolean;
@@ -23,7 +28,7 @@ export const addMedication = createAsyncThunk(
         dosage?: string;
         endDate?: Date;
     }) => {
-        const response = await axios.post(`${API_URL}/medications`, medicationData);
+        const response = await axiosInstance.post(`${API_URL}/medications`, medicationData);
         return response.data.data;
     }
 );
@@ -31,7 +36,7 @@ export const addMedication = createAsyncThunk(
 export const fetchMedications = createAsyncThunk(
     'medications/fetch',
     async () => {
-        const response = await axios.get(`${API_URL}/medications`);
+        const response = await axiosInstance.get(`${API_URL}/medications`);
         return response.data.data;
     }
 );

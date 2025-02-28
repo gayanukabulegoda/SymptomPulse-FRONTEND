@@ -1,10 +1,14 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {useAppSelector} from '../store';
+import {useAppSelector} from '../store/store';
 import {LogoutButton} from '../components/common/LogoutButton';
 import Animated, {FadeInDown, FadeInUp} from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
-
+/**
+ * @file profile.tsx
+ * @description Profile screen component for user to view their profile details.
+ * @exports ProfileScreen
+ */
 const healthQuotes = [
     "Your health is an investment, not an expense.",
     "Take care of your body, it's the only place you have to live.",
@@ -15,6 +19,27 @@ const healthQuotes = [
 
 export default function ProfileScreen() {
     const {user} = useAppSelector((state) => state.auth);
+    const {medications} = useAppSelector((state) => state.medications);
+    const {entries} = useAppSelector((state) => state.symptoms);
+
+    // Calculate days tracked based on unique dates in symptom entries
+    const uniqueDates = new Set();
+    entries.forEach(entry => {
+        const date = new Date(entry.entryDate).toDateString();
+        uniqueDates.add(date);
+    });
+    const daysTracked = uniqueDates.size;
+
+    // Get total symptoms count from all entries
+    const totalSymptoms = entries.reduce((total, entry) => total + entry.symptoms.length, 0);
+
+    // Get active medications count
+    const activeMedications = medications.filter(med => {
+        if (!med.endDate) return true;
+        const endDate = new Date(med.endDate);
+        return endDate >= new Date();
+    }).length;
+
     const randomQuote = healthQuotes[Math.floor(Math.random() * healthQuotes.length)];
 
     return (
@@ -36,10 +61,10 @@ export default function ProfileScreen() {
 
                     <View className="pt-20 pb-6 px-6">
                         <Text className="text-3xl font-extrabold text-center text-gray-900 mb-1">
-                            {user?.name}
+                            {user?.name || 'User'}
                         </Text>
                         <Text className="text-lg text-gray-500 text-center mb-6">
-                            {user?.email}
+                            {user?.email || 'user@example.com'}
                         </Text>
                         <View className="border-t border-gray-100 pt-6">
                             <LogoutButton
@@ -69,14 +94,14 @@ export default function ProfileScreen() {
                 {/* Stats Card */}
                 <Animated.View
                     entering={FadeInUp.delay(700).springify()}
-                    className="bg-white rounded-2xl shadow-lg shadow-primary/10  p-4 md:p-6 lg:p-8"
+                    className="bg-white rounded-2xl shadow-lg shadow-primary/10 p-4 md:p-6 lg:p-8"
                 >
                     <View className="flex flex-row flex-wrap justify-center gap-4 md:gap-6 lg:gap-8">
                         <View className="items-center flex-1">
                             <View className="bg-primary-light/10 p-4 rounded-full mb-3">
                                 <Ionicons name="medical" size={28} color="#4F46E5"/>
                             </View>
-                            <Text className="text-3xl font-bold text-primary-dark mb-1">7</Text>
+                            <Text className="text-3xl font-bold text-primary-dark mb-1">{activeMedications}</Text>
                             <Text className="text-gray-600 font-medium">Active Meds</Text>
                         </View>
 
@@ -84,7 +109,7 @@ export default function ProfileScreen() {
                             <View className="bg-secondary-light/10 p-4 rounded-full mb-3">
                                 <Ionicons name="pulse" size={28} color="#059669"/>
                             </View>
-                            <Text className="text-3xl font-bold text-secondary-dark mb-1">14</Text>
+                            <Text className="text-3xl font-bold text-secondary-dark mb-1">{totalSymptoms}</Text>
                             <Text className="text-gray-600 font-medium">Symptoms</Text>
                         </View>
 
@@ -92,7 +117,7 @@ export default function ProfileScreen() {
                             <View className="bg-primary-light/10 p-4 rounded-full mb-3">
                                 <Ionicons name="calendar" size={28} color="#4F46E5"/>
                             </View>
-                            <Text className="text-3xl font-bold text-primary-dark mb-1">30</Text>
+                            <Text className="text-3xl font-bold text-primary-dark mb-1">{daysTracked}</Text>
                             <Text className="text-gray-600 font-medium">Days Tracked</Text>
                         </View>
                     </View>

@@ -1,14 +1,21 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosConfig';
 import * as SecureStore from 'expo-secure-store';
 import {API_URL} from '../../config';
-
+/**
+ * @file: authSlice.ts
+ * @description: The redux slice for authentication related actions.
+ * @thunks: login, register, refreshToken, logout
+ * @reducer: clearRegistrationSuccess
+ * @exports authSlice
+ */
 interface AuthState {
     user: any | null;
     token: string | null;
     isAuthenticated: boolean;
     loading: boolean;
     error: string | null;
+    registrationSuccess: boolean;
 }
 
 const initialState: AuthState = {
@@ -17,12 +24,13 @@ const initialState: AuthState = {
     isAuthenticated: false,
     loading: false,
     error: null,
+    registrationSuccess: false,
 };
 
 export const login = createAsyncThunk(
     'auth/login',
     async ({email, password}: { email: string; password: string }) => {
-        const response = await axios.post(`${API_URL}/auth/login`, {
+        const response = await axiosInstance.post(`${API_URL}/auth/login`, {
             email,
             password,
         });
@@ -34,7 +42,7 @@ export const login = createAsyncThunk(
 export const register = createAsyncThunk(
     'auth/register',
     async ({email, password, name}: { email: string; password: string; name: string }) => {
-        const response = await axios.post(`${API_URL}/auth/register`, {
+        const response = await axiosInstance.post(`${API_URL}/auth/register`, {
             email,
             password,
             name,
@@ -46,7 +54,7 @@ export const register = createAsyncThunk(
 export const refreshToken = createAsyncThunk(
     'auth/refreshToken',
     async () => {
-        const response = await axios.post(`${API_URL}/auth/refresh`);
+        const response = await axiosInstance.post(`${API_URL}/auth/refresh`);
         await SecureStore.setItemAsync('token', response.data.data.accessToken);
         return response.data;
     }
@@ -55,7 +63,7 @@ export const refreshToken = createAsyncThunk(
 export const logout = createAsyncThunk(
     'auth/logout',
     async () => {
-        await axios.post(`${API_URL}/auth/logout`);
+        await axiosInstance.post(`${API_URL}/auth/logout`);
         await SecureStore.deleteItemAsync('token');
     }
 );
@@ -63,7 +71,11 @@ export const logout = createAsyncThunk(
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        clearRegistrationSuccess: (state) => {
+            state.registrationSuccess = false;
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state) => {
@@ -75,6 +87,7 @@ const authSlice = createSlice({
                 state.user = action.payload.data;
                 state.token = action.payload.data.accessToken;
                 state.isAuthenticated = true;
+                state.registrationSuccess = false;
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
@@ -84,10 +97,10 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(register.fulfilled, (state, action) => {
+            .addCase(register.fulfilled, (state) => {
                 state.loading = false;
-                state.user = action.payload.data;
-                state.isAuthenticated = true;
+                state.registrationSuccess = true;
+                state.isAuthenticated = false;
             })
             .addCase(register.rejected, (state, action) => {
                 state.loading = false;
@@ -100,8 +113,10 @@ const authSlice = createSlice({
                 state.user = null;
                 state.token = null;
                 state.isAuthenticated = false;
+
             });
     },
 });
 
+export const {clearRegistrationSuccess} = authSlice.actions;
 export default authSlice.reducer;

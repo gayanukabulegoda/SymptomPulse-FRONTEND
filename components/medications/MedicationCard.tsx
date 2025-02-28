@@ -1,7 +1,12 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
-
+/**
+ * @file MedicationCard.tsx
+ * @description The medication card component for the medication list.
+ * @param medication - The medication object.
+ * @exports MedicationCard
+ */
 export const MedicationCard = ({medication}: { medication: any }) => {
     const getScheduleText = (schedule: string) => {
         switch (schedule) {

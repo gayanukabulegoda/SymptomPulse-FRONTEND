@@ -3,7 +3,11 @@ import {View, Text, Image} from 'react-native';
 import {Link} from 'expo-router';
 import {LoginForm} from '../../components/auth/LoginForm';
 import Animated, {FadeInDown} from 'react-native-reanimated';
-
+/**
+ * @file login.tsx
+ * @description Login screen component for user to sign in to their account.
+ * @exports LoginScreen
+ */
 export default function LoginScreen() {
     return (
         <View className="flex-1 bg-gray-50">

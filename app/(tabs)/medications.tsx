@@ -4,7 +4,11 @@ import {MedicationList} from '../../components/medications/MedicationList';
 import {AddMedicationButton} from '../../components/medications/AddMedicationButton';
 import Animated, {FadeInDown} from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
-
+/**
+ * @file medications.tsx
+ * @description Medications screen component for user to view and manage their medications.
+ * @exports MedicationsScreen
+ */
 export default function MedicationsScreen() {
     return (
         <View className="flex-1 bg-gray-50">

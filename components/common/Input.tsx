@@ -1,7 +1,11 @@
 import React from 'react';
 import {View, TextInput, Text, Platform} from 'react-native';
 import {twMerge} from 'tailwind-merge';
-
+/**
+ * @file Input.tsx
+ * @description Common input component for the application.
+ * @exports Input
+ */
 interface InputProps {
     label?: string;
     value: string;

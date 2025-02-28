@@ -3,7 +3,11 @@ import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 import {Button} from '../common/Button';
 import Animated, {FadeInRight} from 'react-native-reanimated';
 import {Ionicons} from '@expo/vector-icons';
-
+/**
+ * @file SymptomSelector.tsx
+ * @description The symptom selector component for the symptoms screen.
+ * @exports SymptomSelector
+ */
 const COMMON_SYMPTOMS = [
     'Headache',
     'Fever',
@@ -65,14 +69,14 @@ export const SymptomSelector = ({onSubmit, loading}: SymptomSelectorProps) => {
 
             {/* Custom Symptom Input */}
             <View className="space-y-2">
-                <Text className="text-gray-700 font-medium">Add Custom Symptom</Text>
+                <Text className="text-gray-700 font-medium my-2">Add Custom Symptom</Text>
                 <View className="flex-row space-x-2">
                     <TextInput
                         value={customSymptom}
                         onChangeText={setCustomSymptom}
                         onSubmitEditing={addCustomSymptom}
                         placeholder="Type a symptom..."
-                        className="flex-1 bg-white px-4 py-3 rounded-lg border border-gray-200"
+                        className="flex-1 bg-white px-4 py-3 rounded-lg border border-gray-200 mr-1"
                     />
                     <TouchableOpacity
                         onPress={addCustomSymptom}
@@ -92,7 +96,7 @@ export const SymptomSelector = ({onSubmit, loading}: SymptomSelectorProps) => {
 
             {/* Common Symptoms */}
             <View className="space-y-2">
-                <Text className="text-gray-700 font-medium">Common Symptoms</Text>
+                <Text className="text-gray-700 font-medium my-2">Common Symptoms</Text>
                 <View className="flex-row flex-wrap gap-2">
                     {COMMON_SYMPTOMS.map((symptom, index) => {
                         const isSelected = selectedSymptoms.includes(symptom);

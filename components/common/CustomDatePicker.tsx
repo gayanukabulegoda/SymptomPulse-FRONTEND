@@ -4,7 +4,15 @@ import {Modal, Pressable, Text, View} from "react-native";
 import {XCircle} from "lucide-react-native";
 import {Picker} from "@react-native-picker/picker";
 import {Button} from "./Button";
-
+/**
+ * @file CustomDatePicker.tsx
+ * @description Custom date picker component for the application.
+ * @param visible - The visibility of the date picker.
+ * @param date - The selected date.
+ * @param onDateChange - The function to call when the date is changed.
+ * @param onClose - The function to call when the date picker is closed.
+ * @exports CustomDatePicker
+ */
 export const CustomDatePicker = ({
                               visible,
                               date,

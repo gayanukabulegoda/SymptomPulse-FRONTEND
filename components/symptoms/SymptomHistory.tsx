@@ -1,9 +1,13 @@
 import React from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
-import {useAppSelector, useAppDispatch} from '../../store';
+import {View, Text, FlatList} from 'react-native';
+import {useAppSelector, useAppDispatch} from '../../store/store';
 import {fetchSymptomHistory} from '../../store/slices/symptomSlice';
 import Animated, {FadeInUp} from 'react-native-reanimated';
-
+/**
+ * @file SymptomHistory.tsx
+ * @description The symptom history component for the symptoms screen & dashboard.
+ * @exports SymptomHistory
+ */
 export const SymptomHistory = () => {
     const dispatch = useAppDispatch();
     const {entries, loading, hasMore, currentPage} = useAppSelector(
@@ -19,37 +23,49 @@ export const SymptomHistory = () => {
     const renderItem = ({item, index}: { item: any; index: number }) => (
         <Animated.View
             entering={FadeInUp.delay(index * 100)}
-            style={styles.historyCard}
+            className="border-b border-gray-100 p-4 last:border-b-0"
+            key={`symptom-entry-${item.id}`}
         >
-            <Text style={styles.dateText}>
-                {new Date(item.entryDate).toLocaleDateString()}
-            </Text>
+            <View className="flex-row justify-between items-center mb-3">
+                <Text className="text-lg font-semibold text-gray-800">
+                    {new Date(item.entryDate).toLocaleDateString(undefined, {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                    })}
+                </Text>
+                <View className="bg-primary/10 px-2 py-1 rounded-full">
+                    <Text className="text-xs text-primary font-medium">
+                        {item.symptoms.length} {item.symptoms.length === 1 ? 'symptom' : 'symptoms'}
+                    </Text>
+                </View>
+            </View>
 
-            <View style={styles.symptomsContainer}>
+            <View className="flex-row flex-wrap gap-2 mb-4">
                 {item.symptoms.map((symptom: string, symptomIndex: number) => (
                     <View
-                        key={`${item.id}-${symptom}-${symptomIndex}`}
-                        style={styles.symptomTag}
+                        key={`symptom-${item.id}-${symptomIndex}`}
+                        className="bg-gray-100 px-3 py-1 rounded-full"
                     >
-                        <Text style={styles.symptomText}>{symptom}</Text>
+                        <Text className="text-sm text-gray-700">{symptom}</Text>
                     </View>
                 ))}
             </View>
 
             {item.conditions?.length > 0 && (
-                <View>
-                    <Text style={styles.conditionsTitle}>
+                <View className="bg-gray-50 rounded-xl p-3">
+                    <Text className="text-sm font-medium text-gray-700 mb-2">
                         Possible Conditions:
                     </Text>
                     {item.conditions.map((condition: any, conditionIndex: number) => (
                         <View
-                            key={`${item.id}-${condition.conditionName}-${conditionIndex}`}
-                            style={styles.conditionRow}
+                            key={`condition-${item.id}-${conditionIndex}`}
+                            className="flex-row justify-between items-center py-1"
                         >
-                            <Text style={styles.conditionName}>
+                            <Text className="text-sm text-gray-800">
                                 {condition.conditionName}
                             </Text>
-                            <Text style={styles.likelihood}>
+                            <Text className="text-sm font-medium text-primary">
                                 {condition.likelihood}
                             </Text>
                         </View>
@@ -63,84 +79,17 @@ export const SymptomHistory = () => {
         <FlatList
             data={entries}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => `entry-${item.id}`}
             onEndReached={loadMore}
             onEndReachedThreshold={0.5}
-            contentContainerStyle={styles.listContent}
+            contentContainerStyle={{flexGrow: 1}}
             ListEmptyComponent={
-                <Text style={styles.emptyText}>
-                    No symptom history yet
-                </Text>
+                <View className="p-6 items-center justify-center">
+                    <Text className="text-gray-500 italic text-center">
+                        No symptom history yet
+                    </Text>
+                </View>
             }
         />
     );
 };
-
-const styles = StyleSheet.create({
-    listContent: {
-        flexGrow: 1,
-    },
-    historyCard: {
-        backgroundColor: 'white',
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 16,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 2,
-    },
-    dateText: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#1F2937',
-        marginBottom: 8,
-    },
-    symptomsContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-        marginBottom: 16,
-    },
-    symptomTag: {
-        backgroundColor: '#F3F4F6',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 16,
-    },
-    symptomText: {
-        color: '#4B5563',
-        fontSize: 14,
-    },
-    conditionsTitle: {
-        fontSize: 16,
-        fontWeight: '500',
-        color: '#374151',
-        marginBottom: 8,
-    },
-    conditionRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 4,
-    },
-    conditionName: {
-        color: '#4B5563',
-        fontSize: 14,
-    },
-    likelihood: {
-        color: '#4F46E5',
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    emptyText: {
-        textAlign: 'center',
-        color: '#6B7280',
-        fontStyle: 'italic',
-        marginTop: 16,
-    },
-});

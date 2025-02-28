@@ -1,6 +1,10 @@
 import {Tabs} from 'expo-router';
 import {Ionicons} from '@expo/vector-icons';
-
+/**
+ * @file _layout.tsx
+ * @description Layout component for the tab navigation screens.
+ * @exports TabLayout
+ */
 export default function TabLayout() {
     return (
         <Tabs

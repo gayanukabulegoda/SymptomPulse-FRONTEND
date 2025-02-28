@@ -1,15 +1,18 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Dimensions} from 'react-native';
-import {useAppSelector} from '../../store';
+import {useAppSelector} from '../../store/store';
 import {Card} from '../../components/common/Card';
 import {Ionicons} from '@expo/vector-icons';
 import Animated, {FadeInDown} from 'react-native-reanimated';
 import {useRouter} from 'expo-router';
 import {LogoutButton} from '../../components/common/LogoutButton';
 import {SymptomHistory} from "../../components/symptoms/SymptomHistory";
-
+/**
+ * @file index.tsx
+ * @description Home screen component for user to view features and navigate to other screens.
+ * @exports HomeScreen
+ */
 const {width} = Dimensions.get('window');
-
 const AnimatedScrollView = Animated.createAnimatedComponent(View);
 
 export default function HomeScreen() {
@@ -92,7 +95,7 @@ export default function HomeScreen() {
 
             <View className="p-4">
                 <View className="flex-row flex-wrap justify-between">
-                    {features.map((feature, index) => (
+                    {features.map((feature) => (
                         <Animated.View
                             key={feature.title}
                             entering={FadeInDown.delay(feature.delay).springify()}
