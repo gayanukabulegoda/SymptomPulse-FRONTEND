@@ -1,193 +1,117 @@
-<a id="readme-top"></a>
+# SymptomPulse · Mobile frontend
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/gayanukabulegoda/SymptomPulse-FRONTEND.git">
-    <img src="/assets/symptompulse-logo.png" alt="SymptomPulse Logo" width="150" height="150">
-  </a>
+A React Native/Expo learning project for symptom logging, medication records, and an in-app notification list. It demonstrates mobile navigation, shared state, and integration with a separate authenticated API.
 
-  <h2 align="center">SymptomPulse FRONTEND</h2>
+[Backend](https://github.com/gayanukabulegoda/SymptomPulse-BACKEND) · [Portfolio](https://www.grbulegoda.com)
 
-  <p align="center">
-    Welcome to the <strong>SymptomPulse</strong> mobile app repository! This React Native (Expo) application, built with TypeScript, Redux, and NativeWind, offers users an intuitive interface to check possible conditions from symptoms, receive medical insights via the OpenFDA API, manage medications, and access secure user profiles.
-    <br />
-    <br />
-    <a href="https://github.com/gayanukabulegoda/SymptomPulse-FRONTEND/issues/new?labels=bug">Report Bug</a>
-    ·
-    <a href="https://github.com/gayanukabulegoda/SymptomPulse-FRONTEND/issues/new?labels=enhancement">Request Feature</a>
-  </p>
-</div>
+![SymptomPulse project preview showing the profile, symptom log, and medication screens](assets/symptompulse-readme-preview.png)
 
----
+The preview illustrates the project UI. This is an educational prototype, not a clinically validated diagnostic tool. Any condition labels returned by the backend should not be interpreted as a medical assessment.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#key-features">Key Features</a></li>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation-and-setup">Installation and Setup</a></li>
-        <li><a href="#usage">Usage</a></li>
-      </ul>
-    </li>
-    <li><a href="#api-documentation">API Documentation</a></li>
-    <li><a href="#backend-repository">Backend Repository</a></li>
-    <li><a href="#license">License</a></li>
-  </ol>
-</details>
+## What it demonstrates
 
----
+- Registration and sign-in screens, profile display, and logout.
+- Symptom submission and paginated history.
+- Medication entry with dosage, schedule, and dates.
+- Display of notification records fetched from the backend.
+- Expo Router navigation, Redux Toolkit state, and reusable UI components.
+- Token storage using Expo SecureStore and an Axios response interceptor for refresh attempts.
 
-## About The Project
+**Stack:** Expo SDK 52, React Native 0.76, React 18, TypeScript, Redux Toolkit, NativeWind, and React Native Reanimated.
 
-**SymptomPulse** is a mobile application designed to help users monitor their health by checking symptoms and managing medications with ease. Through an intuitive interface and secure data handling, users can select symptoms (e.g., "headache", "fever"), get potential medical condition suggestions via the OpenFDA API, get medication reminders, and view their health history.
+## Architecture
 
-![Design-Thumbnail](/assets/symptompulse-readme-preview.png)
+```mermaid
+flowchart LR
+    Screens[Expo Router screens] --> Components[Reusable UI components]
+    Components --> Store[Redux slices and async thunks]
+    Store --> API[Axios client]
+    API --> Backend[SymptomPulse backend]
+    Store --> Storage[Expo SecureStore]
+```
 
-### Key Features
+| Directory / file | Responsibility |
+| --- | --- |
+| [app](app) | Auth screens, tabs, profile, medication-entry routes |
+| [components](components) | Forms, cards, lists, and common controls |
+| [store/slices](store/slices) | Auth, symptoms, medication, and notification state |
+| [utils/axiosConfig.ts](utils/axiosConfig.ts) | API client and refresh/error handling |
+| [config.ts](config.ts) | Backend host, port, and API version |
 
-1. **Symptom Checking**
-    - Select symptoms from a curated list (or custom) and receive potential condition insights using the OpenFDA API.
-2. **Medication Management**
-    - Add medications and get reminders, including dosage and timing details.
-3. **Secure User Profiles**
-    - JWT-authenticated profiles ensure that user data is safely managed.
-4. **State Management with Redux**
-    - Leverages Redux Toolkit with Redux Thunk for efficient and predictable state management.
-5. **Responsive Design**
-    - Styled with NativeWind for a clean, modern, and responsive user interface.
+## Run locally
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### 1. Prepare the tools and backend
 
----
+Install Node.js/npm and an emulator or compatible Expo client. Start the [SymptomPulse backend](https://github.com/gayanukabulegoda/SymptomPulse-BACKEND) using that repository's database and environment setup first. The mobile app alone cannot provide authenticated data flows.
 
-### Built With
+This repository uses **Expo SDK 52**. The latest Expo Go app may not support it. Use an SDK-compatible client where available, a compatible development build, or plan an SDK upgrade separately. See [Expo's compatibility and upgrade guidance](https://docs.expo.dev/workflow/upgrading-expo-sdk-walkthrough/). A physical iPhone may require a development build rather than an older Expo Go app.
 
-This project is built using a modern mobile development stack to ensure high performance and an exceptional user experience:
+### 2. Install
 
-[![React Native][reactnative-shield]][reactnative-url]
-[![Expo][expo-shield]][expo-url]
-[![TypeScript][typescript-shield]][typescript-url]
-[![Redux][redux-shield]][redux-url]
-[![Axios][axios-shield]][axios-url]
-[![NativeWind][nativewind-shield]][nativewind-url]
+```sh
+git clone https://github.com/gayanukabulegoda/SymptomPulse-FRONTEND.git
+cd SymptomPulse-FRONTEND
+npm install
+```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+No dependency lockfile is committed, so installations may resolve different versions within the declared ranges.
 
----
+### 3. Point the app at your API
 
-## Getting Started
+Edit [config.ts](config.ts), replacing `Add your IP address here` with the backend host reachable from the device:
 
-Follow these instructions to set up the **SymptomPulse FRONTEND** locally for development and testing.
+```ts
+const IP_ADDRESS = '192.168.1.20'; // Example: use your computer's LAN address
+const PORT = '5000';
+const VERSION = 'v1';
 
-### Prerequisites
+export const API_URL = `http://${IP_ADDRESS}:${PORT}/api/${VERSION}`;
+```
 
-- **Node.js** (v22+ recommended)  
-  [Download & Install Node.js](https://nodejs.org/en/download/)
-- **npm or yarn**  
-  (npm is bundled with Node.js; Yarn is optional)
-- **Expo CLI**  
-  Install globally via:
-  ```bash
-  npm install -g expo-cli
-  ```
+| Target | Backend host |
+| --- | --- |
+| Physical phone | Your computer's LAN IP; connect both devices to the same network |
+| Android Studio emulator | Usually `10.0.2.2` for a backend on the host computer |
+| iOS Simulator on the same Mac | Usually `localhost` |
 
-### Installation and Setup
+Allow local connections to the backend port. An Expo tunnel for the development server does not automatically expose your separate API. Keep backend secrets on the backend; this frontend configuration is not secret storage. Use HTTPS for any remotely hosted API.
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/gayanukabulegoda/SymptomPulse-FRONTEND.git
-   ```
-   Navigate to the project directory:
-   ```bash
-   cd SymptomPulse-FRONTEND
-   ```
+### 4. Start Expo
 
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-   or
-   ```bash
-   yarn install
-   ```
+```sh
+npm start
+```
 
-3. **Configure API Connection**  
-   Instead of using a `.env` file, the backend API connection details are maintained in the `config.ts` file. Update the file with your backend IP address, port, and API version as shown below:
-   ```typescript
-   const IP_ADDRESS = 'Add your IP address here';
-   const PORT = '5000';
-   const VERSION = 'v1';
+Other scripts in this repository:
 
-   export const API_URL = `http://${IP_ADDRESS}:${PORT}/api/${VERSION}`;
-    ```
-   
-### Usage
+| Command | Purpose |
+| --- | --- |
+| `npm run android` | Start Expo and open an Android target |
+| `npm run ios` | Start Expo and open an iOS target; simulator requires macOS/Xcode |
+| `npm run web` | Start the web target; native-module parity is not established |
 
-1. **Start the Development Server**
-   ```bash
-   expo start
-   ```
-   This command launches the Expo development environment, allowing you to run the app on an emulator or a physical device.
+The launcher scripts do not build a custom native client. If your client cannot open SDK 52, resolve the SDK/client mismatch before investigating app logic.
 
-2. **Building for Production**
-   For creating a production build, refer to the [Expo Documentation](https://docs.expo.dev/distribution/building-standalone-apps/).
+## Review the main flows
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+With the backend connected and a test account available:
 
----
+1. Register or sign in and inspect the profile screen.
+2. Submit sample symptoms and load the history.
+3. Add a fictional medication record and check its dates and schedule.
+4. Open the notification tab to view records returned by the backend.
+5. Sign out and confirm the app returns to the authentication flow.
 
-## API Documentation
+Use fictional data for development. The frontend sends requests to its own backend; it does not call OpenFDA directly.
 
-For detailed information on API endpoints, request/response formats, and integration guidelines, refer to the official [Postman Collection](https://documenter.getpostman.com/view/36681432/2sAYdhJqGj).
+## Validation and limitations
 
-Ensure that the backend server is running and properly configured before making API requests.
+- `npx tsc --noEmit` checks TypeScript after installation. No test or lint script is defined in this package.
+- The notification tab displays server records. This repository does not implement OS-level scheduled or push notifications.
+- SecureStore usage means the web target needs separate verification; a web script is not evidence of full browser support.
+- The Axios response interceptor handles refresh retries, but there is no general request interceptor attaching the stored token to initial requests. Verify the backend's authentication contract before treating session handling as complete.
+- Dependency updates, mobile-device testing, and production authentication hardening remain separate work.
 
----
+## License and author
 
-## Backend Repository
-
-The backend for SymptomPulse is built with Node.js, Express, TypeScript, and Prisma. For more details, visit the **SymptomPulse BACKEND** repository:
-- [SymptomPulse BACKEND](https://github.com/gayanukabulegoda/SymptomPulse-BACKEND.git)
-
----
-
-## License
-
-Distributed under the **MIT License**. See [`LICENSE`](https://github.com/gayanukabulegoda/SymptomPulse-FRONTEND/blob/main/LICENSE) for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
----
-
-<div align="center">
-  <p>
-    &copy; 2025 <a href="https://grbulegoda.me/" target="_blank">Gayanuka Bulegoda</a>
-  </p>
-</div>
-
----
-
-<!-- MARKDOWN LINKS & IMAGES -->
-[reactnative-shield]: https://img.shields.io/badge/React%20Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[reactnative-url]: https://reactnative.dev/
-[expo-shield]: https://img.shields.io/badge/Expo-000020?style=for-the-badge&logo=expo&logoColor=white
-[expo-url]: https://expo.dev/
-[typescript-shield]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
-[typescript-url]: https://www.typescriptlang.org/
-[redux-shield]: https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white
-[redux-url]: https://redux.js.org/
-[axios-shield]: https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white
-[axios-url]: https://axios-http.com/
-[nativewind-shield]: https://img.shields.io/badge/NativeWind-000?style=for-the-badge
-[nativewind-url]: https://www.nativewind.dev/
+[MIT](LICENSE) · [Gayanuka Bulegoda](https://www.grbulegoda.com)
